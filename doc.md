@@ -10,7 +10,7 @@
 
 **Backend**  
 Для начала сделайте `git clone https://github.com/NBernkastel/disChan` репозитория с проектом.
-Установите [python 3.11](https://www.python.org/downloads/release/python-3116/) и зависимости
+Установите [python 3.11](https://www.python.org/downloads/release/python-3116/) создайте локальный интерпритатор `python -m venv venv` и установите зависимости
 коммандой `pip install -r requirements.txt`
 Проект запускается из `main.py` на 8000 порту, Генерируемае документация FastAPI на `/docs`,
 основная [документация](https://fastapi.tiangolo.com/)

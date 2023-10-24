@@ -1,7 +1,8 @@
 import abc
-from abc import ABC, abstractmethod
+from abc import ABC
 from sqlalchemy import insert, select, delete, update
-from ..database.db_config import async_session_maker
+from database.db_config import async_session_maker
+
 
 class AbstractRepository(ABC):
 
@@ -29,8 +30,8 @@ class AbstractRepository(ABC):
     async def get_all(self, limit):
         raise NotImplemented
 
-class SQLAlchemyRepository(AbstractRepository):
 
+class SQLAlchemyRepository(AbstractRepository):
     model = None
 
     async def add_one(self, data: dict):

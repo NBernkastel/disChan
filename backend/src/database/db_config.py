@@ -5,7 +5,7 @@ from utils import config
 Base = declarative_base()
 
 engine = create_async_engine(
-    config.DATABASE_URL, future=True
+    config.DATABASE_URL
 )
 
 async_session_maker = async_sessionmaker(engine, expire_on_commit=False)

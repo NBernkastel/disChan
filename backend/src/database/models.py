@@ -15,7 +15,7 @@ class User(Base):
     email: Mapped[str] = mapped_column(String(120), nullable=False, unique=True)
     hash_pass: Mapped[str] = mapped_column(String(128), nullable=False)
     salt: Mapped[str] = mapped_column(String(32), nullable=False)
-    about_me: Mapped[str] = mapped_column(String(140))
+    about_me: Mapped[str] = mapped_column(String(140), nullable=True)
 
 
 class UserToUser(Base):

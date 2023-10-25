@@ -15,5 +15,4 @@ class UserService:
             'salt': salt,
             'email': user.email
         }
-        print(db_user)
         await self.repo.add_one(data=db_user)

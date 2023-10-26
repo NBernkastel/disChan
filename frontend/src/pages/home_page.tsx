@@ -6,10 +6,10 @@ const Home_page: React.FC = () => {
     <div className="bg-dark text-white d-flex flex-column align-items-center justify-content-center" style={{ minHeight: '1vh' }}>
       <h1 style={{ fontSize: '30px' }}>Welcome to the DisChan</h1>
       <div className="mt-3">
-        <Link to="/Sign Up" className="btn btn-primary mr-2">
+        <Link to="/signup" className="btn btn-primary mr-2">
           Sign Up
         </Link>
-        <Link to="/Sign In" className="btn btn-secondary">
+        <Link to="/signin" className="btn btn-secondary">
           Sign In
         </Link>
       </div>

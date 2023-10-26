@@ -12,7 +12,7 @@ const RegistrationForm: React.FC = () => {
 
   const registerUser = async () => {
     try {
-      const response = await axios.post('http://localhost:8084/auth/reg', userData);
+      const response = await axios.post('http://localhost:8000/auth/reg', userData);
       console.log(response.data);
     } catch (error) {
       console.error(error);
@@ -46,7 +46,7 @@ const RegistrationForm: React.FC = () => {
           </Form.Group>
           <Button variant="primary" onClick={registerUser} className="mt-3">Register</Button>
           <div className="mt-2 text-center">
-            Already have an account? <Link to="/Sign In">Sign In</Link>
+            Already have an account? <Link to="/signin">Sign In</Link>
           </div>
         </Form>
       </div>

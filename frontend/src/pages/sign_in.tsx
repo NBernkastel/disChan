@@ -11,7 +11,7 @@ const LoginForm: React.FC = () => {
 
   const loginUser = async () => {
     try {
-      const response = await axios.post('http://localhost:8084/auth/login', userData);
+      const response = await axios.post('http://localhost:8000/auth/login', userData);
       console.log(response.data);
     } catch (error) {
       console.error(error);
@@ -41,7 +41,7 @@ const LoginForm: React.FC = () => {
           </Form.Group>
           <Button variant="primary" onClick={loginUser} className="mt-3">Login</Button>
           <div className="mt-2 text-center">
-            Don't have an account? <Link to="/Sign Up">Sign Up</Link>
+            Don't have an account? <Link to="/signup">Sign Up</Link>
           </div>
         </Form>
       </div>

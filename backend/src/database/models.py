@@ -11,7 +11,7 @@ from sqlalchemy.orm import mapped_column
 class User(Base):
     __tablename__ = 'user'
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    username: Mapped[str] = mapped_column(String(64), nullable=False)
+    username: Mapped[str] = mapped_column(String(64), nullable=False, unique=True)
     email: Mapped[str] = mapped_column(String(120), nullable=False, unique=True)
     hash_pass: Mapped[str] = mapped_column(String(128), nullable=False)
     salt: Mapped[str] = mapped_column(String(32), nullable=False)

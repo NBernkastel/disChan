@@ -1,11 +1,15 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
+from endpoints.audio_socket import socket_router
 from endpoints.auth import auth_router
 
 app = FastAPI()
 
 app.include_router(auth_router)
-# Настройки CORS
+app.include_router(socket_router)
+
+
 origins = [
     "http://localhost",
     "http://localhost:3000",

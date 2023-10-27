@@ -8,3 +8,4 @@ pytest==7.4.2
 sqlalchemy==2.0.22
 email-validator==2.0.0
 Pyjwt==2.8.0
+websockets==12.0

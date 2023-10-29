@@ -12,7 +12,6 @@ async def send_data():
         for i in range(chunk_count):
             start_time = i * sapmle_len
             end_time = (i + 1) * sapmle_len
-            print(i)
             audio_chunk = audio[start_time:end_time]
             message = audio_chunk.raw_data
             await websocket.send(message)

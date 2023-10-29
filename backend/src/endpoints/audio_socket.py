@@ -12,7 +12,9 @@ async def sock(websocket: WebSocket):
     try:
         while True:
             audio_data = await websocket.receive_bytes()
+            print(audio_data)
             audio_data = np.frombuffer(audio_data, dtype=np.int32)
+            print('es')
             sd.play(audio_data, samplerate=48000)
             sd.wait()
             await websocket.send_text("ok")

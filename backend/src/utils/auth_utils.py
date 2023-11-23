@@ -33,13 +33,13 @@ def hash_password(password: str, salt: str, hash_length=64) -> str:
     return hashed_password.hex()
 
 
-def generate_token(username: str, del_time: int = 30) -> str:
+def generate_token(userid: int, del_time: int = 30) -> str:
     """Time in seconds"""
-    if not isinstance(username,str):
-        raise ValueError("username should be string")
+    if not isinstance(userid, int):
+        raise ValueError("user.id should be int")
     expiration = datetime.utcnow() + timedelta(hours=del_time)
     payload = {
-        'username': username,
+        'user.id': userid,
         'exp': expiration
     }
     token: str = encode(payload, SECRET_KEY, algorithm='HS256')
@@ -52,13 +52,11 @@ def verification(password: str, pass_hash: str, salt: str) -> bool:
     return False
 
 
-def verify_token(token: str) -> jwt.PyJWTError or str:
+def verify_token(token: str) -> bool or str:
     try:
         payload = decode(token, SECRET_KEY, algorithms=['HS256'])
         if payload['exp'] < datetime.utcnow().timestamp():
-            raise jwt.ExpiredSignatureError("token expired")
-
+            return False
     except (jwt.DecodeError, jwt.ExpiredSignatureError):
-        raise jwt.PyJWTError
-
-    return payload['username']
+        return False
+    return payload['user.id']

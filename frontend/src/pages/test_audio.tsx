@@ -1,75 +1,77 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const AudioComponent: React.FC = () => {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const mediaStreamRef = useRef<MediaStream | null>(null);
+const AudioRecorder = () => {
+  const [audioStream, setAudioStream] = useState<MediaStream | null>(null);
+  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
+  const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
+  const [recording, setRecording] = useState(false);
 
   useEffect(() => {
-    const socket = new WebSocket('ws://localhost:8000/sockets/test');
+    async function startRecording() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        setAudioStream(stream);
+        const mediaRecorder = new MediaRecorder(stream);
+        setMediaRecorder(mediaRecorder);
 
-    // Event handler for when the WebSocket connection is established
-    socket.onopen = () => {
-      console.log('WebSocket connection established');
-
-      // Start audio stream
-      navigator.mediaDevices.getUserMedia({ audio: true })
-        .then(stream => {
-          mediaStreamRef.current = stream;
-          if (audioRef.current) {
-            audioRef.current.srcObject = stream;
+        mediaRecorder.ondataavailable = (event) => {
+          if (event.data.size > 0) {
+            setAudioChunks((prevChunks) => [...prevChunks, event.data]);
           }
+        };
+      } catch (error) {
+        console.error('Error accessing microphone:', error);
+      }
+    }
 
-          // Create a new RTCPeerConnection
-          const peerConnection = new RTCPeerConnection();
+    if (recording) {
+      startRecording();
+    } else {
+      if (audioStream) {
+        audioStream.getTracks().forEach((track) => track.stop());
+      }
+      if (mediaRecorder && mediaRecorder.state === 'recording') {
+        mediaRecorder.stop();
+      }
+    }
+  }, [recording]);
 
-          // Add the audio track to the peer connection
-          stream.getTracks().forEach(track => {
-            peerConnection.addTrack(track, stream);
-          });
+  const handleStartRecording = () => {
+    setRecording(true);
+  };
 
-          // Create an offer to establish a connection
-          peerConnection.createOffer()
-            .then(offer => peerConnection.setLocalDescription(offer))
-            .then(() => {
-              // Send the offer to the server
-              socket.send(JSON.stringify(peerConnection.localDescription));
-            });
+  const handleStopRecording = () => {
+    setRecording(false);
+  };
 
-          // Event handler for receiving an answer from the server
-          socket.onmessage = async event => {
-            const answer = JSON.parse(event.data);
+  const handleSendDataToServer = () => {
+    // Объедините все audioChunks в один байтовый массив и конвертируйте его в Uint8Array.
+    const blob = new Blob(audioChunks, { type: 'audio/wav' });
 
-            // Set the remote description of the peer connection
-            await peerConnection.setRemoteDescription(answer);
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      if (event.target?.result) {
+        const audioData = new Uint8Array(event.target.result as ArrayBuffer);
 
-            console.log('Connection established');
-          };
-        })
-        .catch(error => {
-          console.error('Error accessing microphone:', error);
-        });
-    };
-
-    // Event handler for when the WebSocket connection is closed
-    socket.onclose = () => {
-      console.log('WebSocket connection closed');
-    };
-
-    // Clean up the WebSocket connection and media stream on component unmount
-    return () => {
-      socket.close();
-      if (mediaStreamRef.current) {
-        mediaStreamRef.current.getTracks().forEach(track => track.stop());
+        // Отправьте данные на сервер по WebSocket.
+        const ws = new WebSocket('ws://localhost:8000/sockets/test');
+        ws.binaryType = 'arraybuffer';
+        ws.onopen = () => {
+          ws.send(audioData.buffer);
+          ws.close();
+        };
       }
     };
-  }, []);
+    reader.readAsArrayBuffer(blob);
+  };
 
   return (
     <div>
-      <div>Audio Component</div>
-      <audio ref={audioRef} controls />
+      <button onClick={handleStartRecording}>Start Recording</button>
+      <button onClick={handleStopRecording}>Stop Recording</button>
+      <button onClick={handleSendDataToServer}>Send Audio to Server</button>
     </div>
   );
 };
 
-export default AudioComponent;
+export default AudioRecorder;

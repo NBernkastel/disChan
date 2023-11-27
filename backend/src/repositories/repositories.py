@@ -6,5 +6,9 @@ class UserRepository(SQLAlchemyRepository):
     model = User
 
 
+class UserToUserRepository(SQLAlchemyRepository):
+    model = User
+
+
 class MessageRepository(SQLAlchemyRepository):
     model = Message

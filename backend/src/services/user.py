@@ -1,6 +1,6 @@
 import pydantic_core
 
-from database.models import User
+from database.models import User, UserToUser
 from shemes.auth import UserRegister
 from utils.repository import AbstractRepository
 from utils.auth_utils import hash_password, generate_salt
@@ -27,3 +27,9 @@ class UserService:
             return await self.repo.get_one(User.email == login)
         except pydantic_core._pydantic_core.PydanticCustomError:
             return await self.repo.get_one(User.username == login)
+
+    async def get_user_friends(self, username) -> list[dict]:
+        friends = await self.repo.get_all_by_filter((UserToUser.first_user == username, UserToUser.is_friend == True),
+                                                    0, UserToUser.first_user.desc())
+        # TODO переделать модели под username вместо user.id, тк jwt хранит username
+        return friends

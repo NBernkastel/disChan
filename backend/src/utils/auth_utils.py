@@ -33,13 +33,13 @@ def hash_password(password: str, salt: str, hash_length=64) -> str:
     return hashed_password.hex()
 
 
-def generate_token(userid: int, del_time: int = 30) -> str:
+def generate_token(username: str, del_time: int = 30) -> str:
     """Time in seconds"""
-    if not isinstance(userid, int):
+    if not isinstance(username, str):
         raise ValueError("user.id should be int")
     expiration = datetime.utcnow() + timedelta(hours=del_time)
     payload = {
-        'user.id': userid,
+        'user.id': username,
         'exp': expiration
     }
     token: str = encode(payload, SECRET_KEY, algorithm='HS256')

@@ -21,8 +21,8 @@ class User(Base):
 class UserToUser(Base):
     __tablename__ = 'user_to_user'
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    first_user: Mapped[int] = mapped_column(ForeignKey('user.id'))
-    second_user: Mapped[int] = mapped_column(ForeignKey('user.id'))
+    first_user: Mapped[int] = mapped_column(ForeignKey('user.username'))
+    second_user: Mapped[int] = mapped_column(ForeignKey('user.username'))
     is_friend: Mapped[bool] = mapped_column(default=False)
 
 
@@ -55,7 +55,7 @@ class Channel(Base):
 class UserServerRole(Base):
     __tablename__ = 'user_server_role'
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    user = mapped_column(ForeignKey('user.id'))
+    user = mapped_column(ForeignKey('user.username'))
     server = mapped_column(ForeignKey('server.id'))
     role = mapped_column(ForeignKey('role.id'))
 
@@ -71,7 +71,7 @@ class ServerChannelRole(Base):
 class Message(Base):
     __tablename__ = 'message'
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    user_from = mapped_column(ForeignKey('user.id'))
+    user_from = mapped_column(ForeignKey('user.username'))
     channel = mapped_column(ForeignKey('channel.id'))
     server = mapped_column(ForeignKey('server.id'), nullable=True)
     body: Mapped[str]

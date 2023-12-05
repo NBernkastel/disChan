@@ -1,7 +1,9 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+// @ts-ignore
+import Cookies from 'js-cookie';
 
 const LoginForm: React.FC = () => {
   const [userData, setUserData] = useState({
@@ -9,12 +11,22 @@ const LoginForm: React.FC = () => {
     password: ''
   });
 
+  const navigate = useNavigate(); // Используем useNavigate для навигации
+
   const loginUser = async () => {
     try {
       const response = await axios.post('http://localhost:8000/auth/login', userData);
-      console.log(response.data);
+      const { access_token } = response.data;
+
+      // Сохранение токена в cookie
+      Cookies.set('access_token', access_token, { expires: 7, secure: true, sameSite: 'Strict' });
+
+      console.log('Login successful');
+
+      // Перенаправление на главную страницу
+      navigate('/main');
     } catch (error) {
-      console.error(error);
+      console.error('Login error:', error);
     }
   }
 

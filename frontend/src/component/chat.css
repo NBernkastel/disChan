@@ -1,0 +1,33 @@
+.chat {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.user-icon {
+  margin-right: 10px;
+  color: #e00ca1;
+}
+
+.username {
+  font-weight: bold;
+}
+
+.last-message {
+  color: #5f5473;
+}
+
+/* Добавляем стили для открытой переписки */
+.chat.open {
+  background-color: #8907ef;
+}
+
+.chat.open .user-icon {
+  color: #888;
+}
+
+.chat.open .username {
+  color: #888;
+}

@@ -2,6 +2,8 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+// @ts-ignore
+import Cookies from 'js-cookie';
 
 const RegistrationForm: React.FC = () => {
   const [userData, setUserData] = useState({
@@ -13,11 +15,16 @@ const RegistrationForm: React.FC = () => {
   const registerUser = async () => {
     try {
       const response = await axios.post('http://localhost:8000/auth/reg', userData);
-      console.log(response.data);
+      const { access_token } = response.data;
+
+      // Сохранение токена в cookie
+      Cookies.set('access_token', access_token, { expires: 7, secure: true, sameSite: 'Strict' });
+
+      console.log('Registration successful');
     } catch (error) {
-      console.error(error);
+      console.error('Registration error:', error);
     }
-  }
+  };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
